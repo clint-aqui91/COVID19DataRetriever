@@ -3,3 +3,63 @@
 *@
 @{
 }
+
+@model COVID19DataRetriever.Models.CovidDataModel
+
+
+@{
+    ViewData["Title"] = "View COVID19 Statistics for Malta";
+}
+<h1>@ViewData["Title"]</h1>
+<hr />
+
+<h4 class="text-center fw-bolder">COVID19 Statistics for Malta</h4>
+
+@if (Model.APIInteractionResult == false)
+    {
+        <div class="text-center fw-bolder text-danger">Something went wrong. Contact the website administrator.</div>
+    }
+
+    else{
+<div class="row">
+
+    <div class="form-group row">
+        <label asp-for="DateLastUpdated" class="label fw-bold col-sm"></label>
+        <input type="text" readonly asp-for="DateLastUpdated" class="form-control-plaintext col-sm">
+    </div>
+
+    <div class="form-group row">
+        <label asp-for="ConfirmedCases" class="label fw-bold col-sm"></label>
+        <input type="text" readonly asp-for="ConfirmedCases" class="form-control-plaintext col-sm">
+    </div>
+
+    <div class="form-group row">
+        <label asp-for="ActiveCasesFromAPI" class="label fw-bold col-sm"></label>
+        <input type="text" readonly asp-for="ActiveCasesFromAPI" class="form-control-plaintext col-sm">
+    </div>
+
+    <div class="form-group row">
+        <label asp-for="CalculatedActiveCases" class="label fw-bold col-sm"></label>
+        <input type="text" readonly asp-for="CalculatedActiveCases" class="form-control-plaintext col-sm">
+    </div>
+
+    <div class="form-group row">
+        <label asp-for="ConfirmedDeaths" class="label fw-bold col-sm"></label>
+        <input type="text" readonly asp-for="ConfirmedDeaths" class="form-control-plaintext  col-sm">
+    </div>
+
+    <div class="form-group row">
+        <label asp-for="DeathRatio" class="col-form-label fw-bold col-sm"></label>
+        <input type="text" readonly asp-for="DeathRatio" class="form-control-plaintext  col-sm"/>
+    </div>
+
+
+    <div class="form-group text-center">
+        <input type="submit" value="Calculate Death Ratio" class="btn btn-danger fw-bold mt-4" />
+        </div>
+
+</div>
+<hr />
+}
+
+
