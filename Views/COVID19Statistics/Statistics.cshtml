@@ -4,6 +4,22 @@
 @{
 }
 
+<script language="javascript">
+
+    function CalculateDeathRatio(ConfirmedCases, ConfirmedDeaths)
+    { var confirmedCases = ConfirmedCases;
+        var confirmedDeaths = ConfirmedDeaths;
+        var ratio = confirmedDeaths / confirmedCases;
+        
+        alert('You clicked !' + confirmedCases + confirmedDeaths + ratio); 
+        // if the fourth decimal place is 0, it will not be displayed (eg. 0.00701 will set value 0.007 and if value is 0.00711, it will set value to 0.0071)
+        ratio = Math.round(ratio * 10000) / 10000
+        document.getElementById("deathratio1").value = ratio;
+        return ratio;
+    }
+
+</script>
+
 @model COVID19DataRetriever.Models.CovidDataModel
 
 
@@ -50,12 +66,12 @@
 
     <div class="form-group row">
         <label asp-for="DeathRatio" class="col-form-label fw-bold col-sm"></label>
-        <input type="text" readonly asp-for="DeathRatio" class="form-control-plaintext  col-sm"/>
+        <input type="text" readonly id="deathratio1" asp-for="DeathRatio" class="form-control-plaintext  col-sm"/>
     </div>
 
 
     <div class="form-group text-center">
-        <input type="submit" value="Calculate Death Ratio" class="btn btn-danger fw-bold mt-4" />
+            <input type="button" value="Calculate Death Ratio" onclick="CalculateDeathRatio('@(Model.ConfirmedCases)','@(Model.ConfirmedDeaths)');" class="btn btn-danger fw-bold mt-4" />
         </div>
 
 </div>

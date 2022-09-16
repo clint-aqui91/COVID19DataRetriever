@@ -2,15 +2,3 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
-
-
-
-    <script type="text/javascript">
-
-        function CalculateDeathRatio(@Model.ConfirmedDeaths, @Model.ConfirmedCases)
-        {alert('You clicked ' + @Model.ConfirmedDeaths + "!");}
-
-    </script>
-
-
-
