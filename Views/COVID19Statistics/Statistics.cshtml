@@ -4,67 +4,70 @@
 @{
 }
 
-
-
+<!--The CovidDataModel model is used for this view.-->
 @model COVID19DataRetriever.Models.CovidDataModel
 
 
 @{
     ViewData["Title"] = "View COVID19 Statistics for Malta";
 }
+
 <h1>@ViewData["Title"]</h1>
 <hr />
 
-
-<div id="map" style="width:100%;height:400px;"></div>
-
 <h4 class="text-center fw-bolder">COVID19 Statistics for Malta</h4>
 
+<!-- If an exception was encountered during the interaction with the API, hence the boolean is false, just display text (in Bootstrap text-danger format)-->
 @if (Model.APIInteractionResult == false)
-    {
-        <div class="text-center fw-bolder text-danger">Something went wrong. Contact the website administrator.</div>
-    }
+{
+    <div class="text-center fw-bolder text-danger">Something went wrong. Contact the website administrator.</div>
+}
 
-    else{
-<div class="row">
+// Else display the data from the API along with the respective labels and the Google Map
+else
+{
+    <div class="row">
 
-    <div class="form-group row">
-        <label asp-for="DateLastUpdated" class="label fw-bold col-sm"></label>
-        <input type="text" readonly asp-for="DateLastUpdated" class="form-control-plaintext col-sm">
-    </div>
+        <div class="form-group row">
+            <label asp-for="DateLastUpdated" class="label fw-bold col-sm"></label>
+            <input type="text" readonly asp-for="DateLastUpdated" class="form-control-plaintext col-sm">
+        </div>
 
-    <div class="form-group row">
-        <label asp-for="ConfirmedCases" class="label fw-bold col-sm"></label>
-        <input type="text" readonly asp-for="ConfirmedCases" class="form-control-plaintext col-sm">
-    </div>
+        <div class="form-group row">
+            <label asp-for="ConfirmedCases" class="label fw-bold col-sm"></label>
+            <input type="text" readonly asp-for="ConfirmedCases" class="form-control-plaintext col-sm">
+        </div>
 
-    <div class="form-group row">
-        <label asp-for="ActiveCasesFromAPI" class="label fw-bold col-sm"></label>
-        <input type="text" readonly asp-for="ActiveCasesFromAPI" class="form-control-plaintext col-sm">
-    </div>
+        <div class="form-group row">
+            <label asp-for="ActiveCasesFromAPI" class="label fw-bold col-sm"></label>
+            <input type="text" readonly asp-for="ActiveCasesFromAPI" class="form-control-plaintext col-sm">
+        </div>
 
-    <div class="form-group row">
-        <label asp-for="CalculatedActiveCases" class="label fw-bold col-sm"></label>
-        <input type="text" readonly asp-for="CalculatedActiveCases" class="form-control-plaintext col-sm">
-    </div>
+        <div class="form-group row">
+            <label asp-for="CalculatedActiveCases" class="label fw-bold col-sm"></label>
+            <input type="text" readonly asp-for="CalculatedActiveCases" class="form-control-plaintext col-sm">
+        </div>
 
-    <div class="form-group row">
-        <label asp-for="ConfirmedDeaths" class="label fw-bold col-sm"></label>
-        <input type="text" readonly asp-for="ConfirmedDeaths" class="form-control-plaintext  col-sm">
-    </div>
+        <div class="form-group row">
+            <label asp-for="ConfirmedDeaths" class="label fw-bold col-sm"></label>
+            <input type="text" readonly asp-for="ConfirmedDeaths" class="form-control-plaintext  col-sm">
+        </div>
 
-    <div class="form-group row">
-        <label asp-for="DeathRatio" class="col-form-label fw-bold col-sm"></label>
-        <input type="text" readonly id="deathratio1" asp-for="DeathRatio" class="form-control-plaintext  col-sm"/>
-    </div>
+        <div class="form-group row">
+            <label asp-for="DeathRatio" class="col-form-label fw-bold col-sm"></label>
+            <input type="text" readonly id="deathratio1" asp-for="DeathRatio" class="form-control-plaintext  col-sm" />
+        </div>
 
-
-    <div class="form-group text-center">
+        <!--Button which calls the JavaScript function calculateDeathRatio from the site.js file, and passes the Confirmed Cases and Confirmed Deaths values from the data model as arguments to the JavaScript function.-->
+        <div class="form-group text-center">
             <input type="button" value="Calculate Death Ratio" onclick="calculateDeathRatio('@(Model.ConfirmedCases)','@(Model.ConfirmedDeaths)');" class="btn btn-danger fw-bold mt-4" />
         </div>
 
-</div>
-<hr />
+    </div>
+    <hr />
+
+    <!--Display Google Map here-->
+    <div id="map" style="width:100%;height:400px;"></div>
 }
 
 

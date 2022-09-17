@@ -7,13 +7,14 @@ using System.Text.Json;
 
 namespace COVID19DataRetriever.Controllers
 {
+    /// <summary>
+    /// Class <c>COVID19Statistics</c> is the controller class containing the controller action method which holds the logic to retrieve the data from the API, populates it into the data model and returns the view with
+    /// the data model object.
+    /// </summary>
     public class COVID19Statistics : Controller
     {
-        //private Task<CovidDataModel> task;
-        //private string body;
 
-
-        // 3 classes to match the JSON object returned from the API. Classes are generated using the https://json2csharp.com/ online tool.
+        // 3 classes to match the JSON object returned from the API. Classes are generated using the https://json2csharp.com/ online tool, from the string (serialized JSON) returned from the API.
         public class Covid19StatisticsRoot
         {
             public List<Covid19Statistics>? data { get; set; }
@@ -45,22 +46,30 @@ namespace COVID19DataRetriever.Controllers
             public List<object> cities { get; set; }
         }
 
-        
 
 
+        /// <summary>
+        /// Method <c>StatisticsAsync</c> is the controller action method responsible of performing the necessary functions to retrieve the data (serialized JSON) from the API, populates it into the data model (from
+        /// deserialized JSON format) and returns the view with the data model object. The Data retrieval from the API is achieved by another method, GetSerializedDataFromAPIAsync (to follow the Single Responsibility
+        /// Principle - each method has a single responsibility).
+        /// </summary>
         public async Task<IActionResult> StatisticsAsync()
         {
             CovidDataModel covidDataModelObject = new CovidDataModel();
             string? serializedJSONObject = await GetSerializedDataFromAPIAsync();
-            Console.WriteLine(serializedJSONObject);
 
-            // If no exception was encountered during the data retrieval from the API, deserialize the JSON string to an object, populate the data model with the same object.
+            //Console.WriteLine(serializedJSONObject);
+
+            // If no exception was encountered during the data retrieval from the API, deserialize the JSON string to an object, populate the data model with the same object (deserializing the JSON object first).
             if (serializedJSONObject != "Data Retrieval from API Failed")
             {
                 // Deserialize JSON Object retrieved from API and C# classes converted from JSON using https://json2csharp.com/
                 // JSON Deserialization library source: Newtonsoft.Json, reference: https://www.newtonsoft.com/json & https://www.nuget.org/packages/Newtonsoft.Json/
+
                 // An object (based on the API's JSON object root is created, containing a list of COVID19Statistics with each containing a list of Region data.
                 Covid19StatisticsRoot objectFromDeserializedJSONObject = JsonConvert.DeserializeObject<Covid19StatisticsRoot>(serializedJSONObject);
+
+                // Populate the data model object from the deserialized JSON object
                 covidDataModelObject.ActiveCasesFromAPI = objectFromDeserializedJSONObject.data[0].active;
                 covidDataModelObject.ConfirmedCases = objectFromDeserializedJSONObject.data[0].confirmed;
 
@@ -69,7 +78,8 @@ namespace COVID19DataRetriever.Controllers
                 covidDataModelObject.ConfirmedDeaths = objectFromDeserializedJSONObject.data[0].deaths;
 
 
-                // The Culture Info of my machine is en-MT, however, the last updated date from the API is en-US. DateTime.Parse was used to ensure that the Date is always converted to the desired/requested culure (dd/mm/yy), en-GB (English Great Britian is used). Time was kept since it was shown in the document's screenshot.
+                // The Culture Info of my machine is en-MT, however, the last updated date from the API is en-US. DateTime.Parse was used to ensure that the Date is always converted to the desired/requested culure (dd/mm/yy),
+                // en-GB (English Great Britian is used).
                 var cultureInfo = new CultureInfo("en-GB");
                 covidDataModelObject.DateLastUpdated = DateTime.Parse(objectFromDeserializedJSONObject.data[0].last_update, cultureInfo);
 
@@ -87,12 +97,18 @@ namespace COVID19DataRetriever.Controllers
             {
                 covidDataModelObject.APIInteractionResult = false;
             }
+
+            // return View with the data model object to user/internet browser
             return View(covidDataModelObject);
 
         }
 
-		public async Task<String> GetSerializedDataFromAPIAsync()
-		{
+        /// <summary>
+        /// Method <c>GetSerializedDataFromAPIAsync</c> is the method responsible of sending a request to the API and retrieving the returned data from the API's response. Exception handling is also used here.
+        /// Code was provided from Rapid API, and amended - original code contained in the comment block after this method.
+        /// </summary>
+        public async Task<String> GetSerializedDataFromAPIAsync()
+        {
             try
             {
                 var httpClient = new HttpClient();
@@ -116,13 +132,14 @@ namespace COVID19DataRetriever.Controllers
                 }
             }
 
-            catch (Exception ex){ 
-            Console.WriteLine(ex.ToString());
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
                 string? body = "Data Retrieval from API Failed";
                 return body;
             }
-			//return body;
-		}
+            //return body;
+        }
 
 
         /*
@@ -145,5 +162,6 @@ using (var response = await client.SendAsync(request))
 	Console.WriteLine(body);
 }
          */
+
     }
 }
