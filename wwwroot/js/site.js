@@ -30,6 +30,7 @@ window.drawGoogleMap = drawGoogleMap;
 
 // JavaScript function which calculates the death ratio based on the passed arguemnts (Confirmed Cases and Confirmed Deaths)
 function calculateDeathRatio(confirmedCases, confirmedDeaths) {
+
     var ratio = confirmedDeaths / confirmedCases;
 
     // alert('You clicked !' + confirmedCases + confirmedDeaths + ratio);
@@ -40,7 +41,6 @@ function calculateDeathRatio(confirmedCases, confirmedDeaths) {
     // Display the ratio value in the HTML element with ID deathratio1
     document.getElementById("deathratio1").value = ratio;
 
-    //return ratio;
 }
 
 
