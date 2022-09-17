@@ -5,10 +5,11 @@ This project contains a web application which interacts with an API to retrieve 
 1. Technologies Used:
    - .NET 6
    - ASP.NET Core MVC (including HTML, CSS, JavaScript and cshtml - Razor)
-   - Libraries and Frameworks Used:
+
+2. Libraries and Frameworks Used:
    - BootStrap
    - JSON.NET
 
-2. APIs used:
+3. APIs used:
    - Google Maps
    - COVID19 Statistics API
