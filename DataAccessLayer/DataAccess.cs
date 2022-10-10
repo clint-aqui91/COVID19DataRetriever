@@ -3,15 +3,15 @@
     public class DataAccess
     {
         /// <summary>
-        /// Method <c>GetSerializedDataFromAPIAsync</c> is the method responsible of sending a request to the API and retrieving the returned data from the API's response. Exception handling is also used here.
-        /// Code was provided from Rapid API, and amended - original code contained in the comment block after this method.
+        /// Method <c>GetSerializedDataFromAPIAsync</c> is the method responsible of sending a request to the API and retrieving the returned response from the API's. Exception handling is also used here.
+        /// Replace the "-- Place API Key here -- with the API key acquired from RapidApi.com"
         /// </summary>
         public async Task<String> GetSerializedDataFromAPIAsync()
         {
             try
             {
-                var httpClient = new HttpClient();
-                var httpRequest = new HttpRequestMessage
+                HttpClient httpClient = new HttpClient();
+                HttpRequestMessage httpRequestMessage = new HttpRequestMessage
                 {
                     Method = HttpMethod.Get,
                     RequestUri = new Uri("https://covid-19-statistics.p.rapidapi.com/reports?q=Malta&region_name=Malta&iso=MLT"),
@@ -22,12 +22,12 @@
                 },
                 };
 
-                using (HttpResponseMessage response = await httpClient.SendAsync(httpRequest))
+                using (HttpResponseMessage response = await httpClient.SendAsync(httpRequestMessage))
                 {
                     response.EnsureSuccessStatusCode();
-                    string? DataFromAPI = await response.Content.ReadAsStringAsync();
-                    Console.WriteLine(DataFromAPI);
-                    return DataFromAPI;
+                    string? APIResponseContent = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine(APIResponseContent);
+                    return APIResponseContent;
                 }
             }
 

@@ -6,23 +6,26 @@ using static COVID19DataRetriever.ApplicationLogicLayer.DeserializedCOVID19Stati
 
 namespace COVID19DataRetriever.ApplicationLogicLayer
 {
+    /// <summary>
+    /// Class <c>ApplicationLogic</c> contains the application logic code of the web application's back-end.
+    /// layer.
+    /// </summary>
     public class ApplicationLogic
     {
         /// <summary>
-        /// Method <c>GetSerializedDataFromAPIAsync</c> is the method responsible of sending a request to the API and retrieving the returned data from the API's response. Exception handling is also used here.
-        /// Code was provided from Rapid API, and amended - original code contained in the comment block after this method.
+        /// Method <c>GetCOVID19Statistics</c> contains the application logic method which calls the data access layer to retrieve the COVID19 Statistics from the API, then deserializes it using the other class found in
+        /// this layer.
         /// </summary>
         public async Task<CovidDataModel> GetCOVID19Statistics(CovidDataModel covidDataModelObject)
         {
             DataAccess dataAccessObject = new DataAccess();
             string APIResponse = await dataAccessObject.GetSerializedDataFromAPIAsync();
+
+            // If API response does not contain string value denoting API interaction failure, deserialize the JSON object contained within the string, and return it to the calling method (being the MVC's controller
+            // component).
             if (APIResponse != "Data Retrieval from API Failed")
             {
-                
-
-
-                // An object (based on the API's JSON object root is created, containing a list of COVID19Statistics with each containing a list of Region data.
-
+                // Deserialization of the JSON object
                 Covid19StatisticsRoot covid19StatisticsRootObject = new Covid19StatisticsRoot();
                 DeserializedCOVID19Statistics deserializedCOVID19StatisticsObject = new DeserializedCOVID19Statistics();
                 covid19StatisticsRootObject = deserializedCOVID19StatisticsObject.DeserializeCOVID19Statistics(APIResponse);
@@ -35,9 +38,10 @@ namespace COVID19DataRetriever.ApplicationLogicLayer
                 covidDataModelObject.CalculatedActiveCases = (covidDataModelObject.ConfirmedCases - covidDataModelObject.ActiveCasesFromAPI);
                 covidDataModelObject.ConfirmedDeaths = covid19StatisticsRootObject.data[0].deaths;
 
-
-                // The Culture Info of my machine is en-MT, however, the last updated date from the API is en-US. DateTime.Parse was used to ensure that the Date is always converted to the desired/requested culure (dd/mm/yy),
-                // en-GB (English Great Britian is used).
+                /*
+                 * The Culture Info of my machine is en-MT, however, the last updated date from the API is en-US. DateTime.Parse was used to ensure that the Date is always converted to the desired/requested culure
+                 * (dd/mm/yy), en-GB (English Great Britian is used).
+                */
                 var cultureInfo = new CultureInfo("en-GB");
                 covidDataModelObject.DateLastUpdated = DateTime.Parse(covid19StatisticsRootObject.data[0].last_update, cultureInfo);
 
@@ -51,6 +55,8 @@ namespace COVID19DataRetriever.ApplicationLogicLayer
 
                 return covidDataModelObject;
             }
+
+            // Else, hence string returned from the data access layer denotes API interaction failure, set the boolean property found in the data model to false and return the data model object.
             else
             {
                 covidDataModelObject.APIInteractionResult = false;
@@ -58,38 +64,5 @@ namespace COVID19DataRetriever.ApplicationLogicLayer
             }
         }
 
-        /*
-        // 3 classes to match the JSON object returned from the API. Classes are generated using the https://json2csharp.com/ online tool, from the string (serialized JSON) returned from the API.
-        public class Covid19StatisticsRoot
-        {
-            public List<Covid19Statistics>? data { get; set; }
-        }
-
-        public class Covid19Statistics
-        {
-            public string date { get; set; }
-            public int confirmed { get; set; }
-            public int deaths { get; set; }
-            public int recovered { get; set; }
-            public int confirmed_diff { get; set; }
-            public int deaths_diff { get; set; }
-            public int recovered_diff { get; set; }
-            public string last_update { get; set; }
-            public int active { get; set; }
-            public int active_diff { get; set; }
-            public double fatality_rate { get; set; }
-            public Region region { get; set; }
-        }
-
-        public class Region
-        {
-            public string iso { get; set; }
-            public string name { get; set; }
-            public string province { get; set; }
-            public string lat { get; set; }
-            public string @long { get; set; }
-            public List<object> cities { get; set; }
-        }
-        */
     }
 }

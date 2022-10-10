@@ -6,9 +6,9 @@ namespace COVID19DataRetriever.ApplicationLogicLayer
     {
         /// <summary>
         /// Class <c>DeserializedCOVID19Statistics</c> contains three sub-classes matching the JSON object's hierarchy and a method to deserialize the JSON object and returns it.
+        /// 3 classes to match the JSON object returned from the API. Classes are generated using the https://json2csharp.com/ online tool, from the string (serialized JSON) returned from the API.
         /// </summary>
 
-        // 3 classes to match the JSON object returned from the API. Classes are generated using the https://json2csharp.com/ online tool, from the string (serialized JSON) returned from the API.
         public class Covid19StatisticsRoot
         {
             public List<Covid19Statistics>? data { get; set; }
