@@ -1,4 +1,6 @@
-﻿using COVID19DataRetriever.Models;
+﻿using COVID19DataRetriever.ApplicationLogicLayer;
+using COVID19DataRetriever.DataAccessLayer;
+using COVID19DataRetriever.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Globalization;
@@ -56,10 +58,14 @@ namespace COVID19DataRetriever.Controllers
         public async Task<IActionResult> StatisticsAsync()
         {
             CovidDataModel covidDataModelObject = new CovidDataModel();
-            string? serializedJSONObject = await GetSerializedDataFromAPIAsync();
+
+            ApplicationLogic applicationLogicObject = new ApplicationLogic();
+            covidDataModelObject = await applicationLogicObject.GetCOVID19Statistics(covidDataModelObject);
+            //string? serializedJSONObject = await GetSerializedDataFromAPIAsync();
 
             //Console.WriteLine(serializedJSONObject);
 
+            /*
             // If no exception was encountered during the data retrieval from the API, deserialize the JSON string to an object, populate the data model with the same object (deserializing the JSON object first).
             if (serializedJSONObject != "Data Retrieval from API Failed")
             {
@@ -97,7 +103,7 @@ namespace COVID19DataRetriever.Controllers
             {
                 covidDataModelObject.APIInteractionResult = false;
             }
-
+            */
             // return View with the data model object to user/internet browser
             return View(covidDataModelObject);
 
